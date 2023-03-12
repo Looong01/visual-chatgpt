@@ -17,22 +17,23 @@ See our paper: [<font size=5>Visual ChatGPT: Talking, Drawing and Editing with V
 
 ```
 # create a new environment
-conda create -n visgpt python=3.8
+conda create -n visgpt python=3.9
 
 # activate the new environment
 conda activate visgpt
 
 #  prepare the basic environments
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
 pip install -r requirement.txt
 
 # download the visual foundation models
-bash download.sh
+.\download.ps1
 
 # prepare your private openAI private key
-export OPENAI_API_KEY={Your_Private_Openai_Key}
+set OPENAI_API_KEY={Your_Private_Openai_Key}
 
 # create a folder to save images
-mkdir ./image
+mkdir image
 
 # Start Visual ChatGPT !
 python visual_chatgpt.py
