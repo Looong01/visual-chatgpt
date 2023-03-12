@@ -114,7 +114,7 @@ def get_new_image_name(org_img_name, func_name="update"):
 
 def create_model(config_path, device):
     config = OmegaConf.load(config_path)
-    OmegaConf.update(config, "model.params.cond_stage_config.params.device", device)
+    #OmegaConf.update(config, "model.params.cond_stage_config.params.device", device)
     model = instantiate_from_config(config.model).cpu()
     print(f'Loaded model config from [{config_path}]')
     return model
