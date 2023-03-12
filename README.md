@@ -23,7 +23,7 @@ conda create -n visgpt python=3.9
 conda activate visgpt
 
 #  prepare the basic environments
-conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
 pip install -r requirement.txt
 
 # download the visual foundation models
