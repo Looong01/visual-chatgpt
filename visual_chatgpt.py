@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 import gradio as gr
 from transformers import AutoModelForCausalLM, AutoTokenizer, CLIPSegProcessor, CLIPSegForImageSegmentation
 import torch
+import torch_directml
 from diffusers import StableDiffusionPipeline
 from diffusers import StableDiffusionInstructPix2PixPipeline, EulerAncestralDiscreteScheduler
 import os
@@ -33,6 +34,8 @@ from ControlNet.annotator.hed import HEDdetector, nms
 from ControlNet.annotator.openpose import OpenposeDetector
 from ControlNet.annotator.uniformer import UniformerDetector
 from ControlNet.annotator.midas import MidasDetector
+
+dml = torch_directml.device()
 
 VISUAL_CHATGPT_PREFIX = """Visual ChatGPT is designed to be able to assist with a wide range of text and visual related tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. Visual ChatGPT is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
 
@@ -801,27 +804,27 @@ class ConversationBot:
     def __init__(self):
         print("Initializing VisualChatGPT")
         self.llm = OpenAI(temperature=0)
-        self.edit = ImageEditing(device="cuda:6")
-        self.i2t = ImageCaptioning(device="cuda:4")
-        self.t2i = T2I(device="cuda:1")
+        self.edit = ImageEditing(device=dml)
+        self.i2t = ImageCaptioning(device=dml)
+        self.t2i = T2I(device=dml)
         self.image2canny = image2canny()
-        self.canny2image = canny2image(device="cuda:1")
+        self.canny2image = canny2image(device=dml)
         self.image2line = image2line()
-        self.line2image = line2image(device="cuda:1")
+        self.line2image = line2image(device=dml)
         self.image2hed = image2hed()
-        self.hed2image = hed2image(device="cuda:2")
+        self.hed2image = hed2image(device=dml)
         self.image2scribble = image2scribble()
-        self.scribble2image = scribble2image(device="cuda:3")
+        self.scribble2image = scribble2image(device=dml)
         self.image2pose = image2pose()
-        self.pose2image = pose2image(device="cuda:3")
-        self.BLIPVQA = BLIPVQA(device="cuda:4")
+        self.pose2image = pose2image(device=dml)
+        self.BLIPVQA = BLIPVQA(device=dml)
         self.image2seg = image2seg()
-        self.seg2image = seg2image(device="cuda:7")
+        self.seg2image = seg2image(device=dml)
         self.image2depth = image2depth()
-        self.depth2image = depth2image(device="cuda:7")
+        self.depth2image = depth2image(device=dml)
         self.image2normal = image2normal()
-        self.normal2image = normal2image(device="cuda:5")
-        self.pix2pix = Pix2Pix(device="cuda:3")
+        self.normal2image = normal2image(device=dml)
+        self.pix2pix = Pix2Pix(device=dml)
         self.memory = ConversationBufferMemory(memory_key="chat_history", output_key='output')
         self.tools = [
             Tool(name="Get Photo Description", func=self.i2t.inference,
